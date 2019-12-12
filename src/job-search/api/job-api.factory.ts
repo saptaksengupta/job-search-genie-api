@@ -1,15 +1,18 @@
 import { Injectable } from "@nestjs/common";
+import { ConfigService } from "../../config/config.service";
 
 import { GitHubApiService } from "./github/github.api.service";
 import { IndeedApiService } from "./indeed/indeed.api.service";
 
 @Injectable()
 export class JobApiFactory {
-    constructor(private githubApi: GitHubApiService, private indeedApi: IndeedApiService) {
+    constructor(private githubApi: GitHubApiService, 
+        private indeedApi: IndeedApiService,
+        private config: ConfigService) {
 
     }
     public getApiInstance() {
-        const selectedApiProvider: string = 'GITHUB';
+        const selectedApiProvider: string = this.config.get('ACTIVATED_JOB_SEARCH_PROVIDER');
         switch (selectedApiProvider) {
             case 'GITHUB':
                 return this.githubApi;
